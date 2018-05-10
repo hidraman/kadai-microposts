@@ -11,11 +11,17 @@ class UsersController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(1);
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('users.index', [
-            'users' => $users,
-        ]);
+            $data = [
+                'user' => $user,
+                'microposts' => $microposts,
+            ];
+        }
+        return view('welcome', $data);
     }
     public function show($id)
     {
