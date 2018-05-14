@@ -11,17 +11,11 @@ class UsersController extends Controller
 {
     public function index()
     {
-        $data = [];
-        if (\Auth::check()) {
-            $user = \Auth::user();
-            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10);
+        $users = User::all();
 
-            $data = [
-                'user' => $user,
-                'microposts' => $microposts,
-            ];
-        }
-        return view('welcome', $data);
+        return view('users.index', [
+            'users' => $users,
+        ]);
     }
     public function show($id)
     {
@@ -64,5 +58,22 @@ class UsersController extends Controller
         $data += $this->counts($user);
 
         return view('users.followers', $data);
+    }
+    public function favorites($id)
+    {
+        $user = User::find($id);
+        $favorites = $user->favorites()->paginate(10);
+        //dd($favorites);
+        //$microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
+        
+        
+        $data = [
+            'user' => $user,
+            'microposts' => $favorites,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.favorites', $data);
     }
 }

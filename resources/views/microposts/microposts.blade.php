@@ -12,6 +12,7 @@
             <div>
                 <p>{!! nl2br(e($micropost->content)) !!}</p>
             </div>
+             @include('user_favorite.favorite_button', ['user' => $micropost])
         </div>
     </li>
 @endforeach
